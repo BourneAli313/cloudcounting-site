@@ -46,9 +46,13 @@ h1 span{color:var(--blue)}
 .btn-ghost:hover{background:#fff;transform:translateY(-2px)}
 .btn:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .note{min-height:1.6em;margin:12px 0 0;font-size:14px;color:var(--green);font-weight:600}
-.points{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:22px 0 0;padding:0;color:var(--muted);font-size:15px;animation:rise 1s .56s cubic-bezier(.2,.7,.2,1) backwards}
-.points li{display:flex;align-items:center;gap:8px}
-.points li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}
+.points{list-style:none;display:grid;justify-items:center;margin:30px 0 0;padding:0;min-height:46px;animation:rise 1s .56s cubic-bezier(.2,.7,.2,1) backwards}
+.points li{grid-area:1/1;display:inline-flex;align-items:center;gap:12px;padding:8px 22px 8px 8px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(16,40,80,.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:15.5px;font-weight:600;color:var(--fg);opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.points li.on{opacity:1;transform:none}
+.pi{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(26,133,212,.12);color:var(--blue);flex:none}
+.pi svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.no-rot .points{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.no-rot .points li{grid-area:auto;opacity:1;transform:none;transition:none}
 
 footer{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;padding:0 16px clamp(20px,4vh,32px);font-size:13.5px;color:var(--dim);text-align:center}
 footer b{font-family:var(--font-display);font-weight:600;color:var(--fg);letter-spacing:-.01em}
@@ -56,7 +60,7 @@ footer a{color:inherit}
 
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes ping{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.8);opacity:0}}
-@media (max-width:520px){.actions{flex-direction:column;align-items:stretch;width:100%}.btn{justify-content:center}.points{flex-direction:column;align-items:center;gap:8px}}
+@media (max-width:520px){.actions{flex-direction:column;align-items:stretch;width:100%}.btn{justify-content:center}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}.btn{transition:none}}
 </style>
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFIUlEQVR4nLWXX2gc1xXGf3dmdrXaldeSIoWV7arQYJXEIXZIUAUBQ5q3OAKFgisCaQk2gYChEEKit0BpwMF22j6W0odSEur2oQ9+SEICfkjAL0lMnRKXJjGpFClIlr3yn/WsZubeLw8zs95odxNHUs7LDGfuPd93v3PunXsAkORnzz2SXpX0iaRIklNmzjlZa2WtlXMt952Yy2J9ksXe047ZDj4jabFjtnNKkqQjapIk35dIbouSZjaSmG4bEGesZa297YxjLSwsaGlpqYPgHZrLYuc2nYOPSbqcOVtLzcFXVlY0NzenAwcOaGxsTLt379bU1JROnjypKIq+L4l2jMuSxpB0ohf4hQsXNDExIUDValWDg4MaHBzUwMCAAE1OTmp+fl7Ouc2SOOEBM4AAkymCMYZ6vc7s7CyXLl2iVqsRhiFxHLO+vo61liAIqFQqeJ7HJsxkmDNIsu3U4jhN0/HjxwWoVqupVCrp2LFjOnfunM6ePavp6WkdOXKkpdQmi1GSLBs9uZwHDx5UpVJRsVjU0aNHe0bYArgk6Rv6KZO/0WiwvLxMEARI4vDhw1hriaIIa21rbD5+K9Y1gUEQEAQBAM45VldX8X0f4SHjY10KvFXwDgLGGJxzlEolJiYmCMOQcrnCqdf+wFdLi/QVAwIPfG/rwC3bmJP81Dtz5owAjYyMqA/003379cLv/665f1zU6fNraQVtLf2SJCNJG0k55/A8j2PPPctf/voGI48+RzJxiKhvmLUmzD40xOtP/wjrwN/ULrxtQXd3KvFLvz3Fm6Unie/eT0VNdigmcTFZHbINJdBJQEproR5anj59hcbOCSrRVa6tQ1/B576xfh7Y3d9Gc7sJAJ6Bl99c4YP/32Cs6lO/ZXjkngFefGyUyfEyhfQftv0KOKXg/15q8s+P6tSqBeqh5fF9Vf48u4e+IEVMVdo6eAcBZZFf/2CN600LBmrVAqdmdtEXGJKs6LYLvIOAl+3vq7cs99VKNBPx1MNDjA6kh0+wnft/I4H8dxhZ8dB4mfGhAo1IPH7vjlZh/hB2W4GMgXWwUI+5FibENlXFmDTvP4S1jpF8gf0FQ7XksR6LRmSZvxql/DbBQEoLO3G9536jBqwTvmf4z1LI6Y/q+J4hjMWhfWkaelW/lAqYPoUBPJMql7/nFDZO73qQ/npymJ39Pj8eLvLeZzd548M1Aj8N6JQStU7kCzMm3b6+B4Fn8LO0rYWOD79s8so7l/nXxzdaivRUwPcMEvx8b4VHfjLA+5/fYGe/z9yZr2gm8MsHd1Ipmg4ZrjcdKzcTFq8lXLoS8d/lJp9djvjiasTHSyFP7h/kNwfvSle/QQIjybYrkR9Gn65GPPGnL7gWxpSLHmuhY+9oift3lRgu+9yKHFcaltVGwpWbCfXQ0ogciRW+B86JdQvP/GyYP/5iF77pmkJnJH0K3EN2CreTOL/Y5Fd/m+fLtYihsk9sRTMWVnluU8kD31DwwWCIraMRi9qOAs8/OsqRqaFWnbSBu0yLz42kE8ALgAX8fIQV+AYW1mJ+9/YKb128wfWmJfCg4N+OZAXWikSi4BnGh4ocur/K0alhxocK6fY1HcrnWCeNpDHgAjCykUSuBMDF5XXe/d9Nzi+ELF1PWE8cnjGUCoa7BwL2jhZ5eLzM5HiZwf40oz3uCznGKvBAJk/31iy/9XS7+SQ9/JKUWNftW8/W7Fub03YiPQK3viVWuoNbetfm9Dvb827LucMr4be2518DKXmB06Vf9tcAAAAASUVORK5CYII=">
@@ -86,10 +90,10 @@ footer a{color:inherit}
       </div>
       <p class="note" id="note" role="status" aria-live="polite"></p>
       <ul class="points">
-        <li>Flat monthly fees</li>
-        <li>GST/HST &amp; PST handled</li>
-        <li>Payroll &amp; WorkSafeBC filings</li>
-        <li>Reconciled every month</li>
+        <li><span class="pi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v10H8l-4 4z"/><path d="M8 10h8M8 13h5"/></svg></span><span>Quoted to fit your business</span></li>
+        <li><span class="pi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 8h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg></span><span>GST/HST &amp; PST handled</span></li>
+        <li><span class="pi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span>Payroll &amp; WorkSafeBC filings</span></li>
+        <li><span class="pi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15l2 2 4-4"/></svg></span><span>Reconciled every month</span></li>
       </ul>
     </div>
   </main>
@@ -157,6 +161,16 @@ footer a{color:inherit}
   page.addEventListener('pointermove',function(e){var r=page.getBoundingClientRect();tx=(e.clientX-r.left)/r.width;ty=1-(e.clientY-r.top)/r.height},{passive:true});
   document.addEventListener('visibilitychange',function(){if(document.hidden){cancelAnimationFrame(raf);raf=0}else if(!raf)raf=requestAnimationFrame(frame)});
   window.addEventListener('resize',size);size();raf=requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* rotate the service points one at a time; show them all if motion is reduced */
+(function(){
+  var ul=document.querySelector('.points');if(!ul)return;
+  var li=[].slice.call(ul.children),i=0,mq=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)');
+  if(mq&&mq.matches||li.length<2){document.documentElement.classList.add('no-rot');return}
+  li[0].classList.add('on');
+  setInterval(function(){li[i].classList.remove('on');i=(i+1)%li.length;li[i].classList.add('on')},3200);
 })();
 </script>
 </body>
