@@ -841,6 +841,21 @@ footer{background:#cfe2f6;overflow:hidden}
 .cf-submit{justify-self:start;padding:15px 30px;font-size:16px}
 .cf-submit[disabled]{opacity:.7;cursor:progress}
 .cta .cf .cf-fine{margin:-6px 0 0;font-size:13px;color:var(--dim)}
+.cf-help{font-size:13px;color:var(--dim)}
+.cf-vol-box{padding:16px 18px 14px;border:1px solid var(--line);border-radius:14px;background:#f6f9fd;display:grid;gap:10px}
+.cf-vol-out{font:700 17px var(--font-display);color:var(--dim);transition:color .2s}
+.cf-vol.on .cf-vol-out{color:#0f5d9c}
+.cf-vol input[type=range]{--p:0%;-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;border:0;padding:0;margin:6px 0;cursor:pointer;
+  background:linear-gradient(90deg,#9cc8ee var(--p),#dbe6f2 var(--p));box-shadow:none}
+.cf-vol.on input[type=range]{background:linear-gradient(90deg,#1a85d4 var(--p),#dbe6f2 var(--p))}
+.cf-vol input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #9aa9bd;box-shadow:0 3px 10px rgba(16,40,80,.22);transition:border-color .2s}
+.cf-vol input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #9aa9bd;box-shadow:0 3px 10px rgba(16,40,80,.22)}
+.cf-vol.on input[type=range]::-webkit-slider-thumb{border-color:#1a85d4}
+.cf-vol.on input[type=range]::-moz-range-thumb{border-color:#1a85d4}
+.cf-vol input[type=range]:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(26,133,212,.2)}
+.cf-vol-ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);gap:4px}
+.cf-vol-ticks span{flex:1;text-align:center}.cf-vol-ticks span:first-child{text-align:left}.cf-vol-ticks span:last-child{text-align:right}
+@media(max-width:640px){.cf-vol-ticks span:nth-child(even){display:none}.cf-vol-ticks{justify-content:space-between}.cf-vol-ticks span{flex:none}}
 .cf [hidden]{display:none!important}
 .cf-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
 .cf-done{text-align:center;padding:40px 10px 20px}
@@ -867,6 +882,8 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
   </nav>
   <a class="btn btn-sm" href="#contact-form">Get in touch</a>
 </header>
+
+<main id="top" data-sky="#ffffff,#eaf3fc,#d9eafb">
 <section class="hero">
   <div class="glow g1" data-hero="0.25" aria-hidden="true"></div>
   <div class="glow g2" data-hero="-0.12" aria-hidden="true"></div>
@@ -1353,6 +1370,14 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
           <div class="cf-field cf-soft-other" hidden><label for="cfSoftOther">Which software?</label><input id="cfSoftOther" name="Other software" type="text" placeholder="For example: Wave, FreshBooks, spreadsheets"></div>
         </div>
 
+        <div class="cf-field cf-vol"><label for="cfVol">Approximate transactions per month <span>Optional</span></label>
+          <div class="cf-vol-box">
+            <output id="cfVolOut" class="cf-vol-out" for="cfVol">Drag to choose</output>
+            <input id="cfVol" name="Monthly transactions" type="range" min="0" max="5" step="1" value="0" aria-describedby="cfVolHelp" aria-valuetext="Not chosen yet">
+            <div class="cf-vol-ticks" aria-hidden="true"><span>Under 50</span><span>50 to 150</span><span>150 to 300</span><span>300 to 600</span><span>600 to 1,000</span><span>1,000+</span></div>
+          </div>
+          <small id="cfVolHelp" class="cf-help">A rough guess is fine. Count bank and credit card transactions together.</small></div>
+
         <fieldset class="cf-field">
           <legend>How should we contact you? <i>*</i></legend>
           <div class="cf-seg">
@@ -1368,7 +1393,13 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
         <div class="cf-field cf-time" hidden><label for="cfTime">Best time to call</label>
           <select id="cfTime" name="Best time to call"><option>Any time</option><option>Morning (9 to 12)</option><option>Afternoon (12 to 5)</option></select></div>
 
-        <div class="cf-field"><label for="cfMsg">Anything else we should know? <span>Optional</span></label><textarea id="cfMsg" name="Message" rows="4" placeholder="For example: how many transactions you have a month, or how far behind the books are."></textarea></div>
+        <div class="cf-field"><label for="cfMsg">Anything else we should know? <span>Optional</span></label><textarea id="cfMsg" name="Message" rows="4" placeholder="For example: how far behind the books are, or anything about your business we should know."></textarea></div>
+
+        <div class="cf-row">
+          <div class="cf-field"><label for="cfHear">How did you hear about us? <span>Optional</span></label>
+            <select id="cfHear" name="How they found us"><option value="">Select</option><option>Google or other search</option><option>Referral from a client or friend</option><option>Referral from an accountant or advisor</option><option>LinkedIn</option><option>Facebook or Instagram</option><option>Other</option></select></div>
+          <div class="cf-field cf-hear-more" hidden><label for="cfHearMore" id="cfHearLbl">Who referred you?</label><input id="cfHearMore" name="How they found us (detail)" type="text"></div>
+        </div>
 
         <label class="cf-consent"><input type="checkbox" id="cfConsent" name="Consent" value="Agreed to be contacted" required><span>I agree to be contacted by CloudCounting about this enquiry. I can withdraw consent at any time.</span></label>
 
@@ -2404,6 +2435,20 @@ window.CCgl=function(cv,frag){
   soft.addEventListener('change',function(){syncSoft();if(soft.value==='Other')softTxt.focus()});
   syncSoft();
 
+  var vol=$('cfVol'),volOut=$('cfVolOut'),volBox=form.querySelector('.cf-vol'),VOL=['Under 50','50 to 150','150 to 300','300 to 600','600 to 1,000','1,000+'],volTouched=false;
+  function syncVol(){var v=+vol.value;vol.style.setProperty('--p',(v/5*100)+'%');
+    if(!volTouched){volOut.textContent='Drag to choose';vol.setAttribute('aria-valuetext','Not chosen yet');volBox.classList.remove('on');return}
+    volOut.textContent=VOL[v]+' a month';vol.setAttribute('aria-valuetext',VOL[v]+' transactions a month');volBox.classList.add('on')}
+  vol.addEventListener('input',function(){volTouched=true;syncVol()});
+  syncVol();
+  var hear=$('cfHear'),hearBox=form.querySelector('.cf-hear-more'),hearTxt=$('cfHearMore'),hearLbl=$('cfHearLbl');
+  function syncHear(){var v=hear.value,ref=/^Referral/.test(v),oth=v==='Other';hearBox.hidden=!(ref||oth);hearTxt.disabled=!(ref||oth);
+    if(ref){hearLbl.textContent='Who referred you?';hearTxt.placeholder='A name helps us say thank you'}
+    else if(oth){hearLbl.textContent='Where did you hear about us?';hearTxt.placeholder=''}
+    if(!(ref||oth))hearTxt.value=''}
+  hear.addEventListener('change',function(){syncHear();if(!hearBox.hidden)hearTxt.focus()});
+  syncHear();
+
   function services(){return [].slice.call(chips.querySelectorAll('input:checked')).map(function(i){return i.getAttribute('data-cf-v')})}
   function validate(){
     var bad=[],msgs=[];
@@ -2422,6 +2467,8 @@ window.CCgl=function(cv,frag){
       Industry:$('cfInd').value||'-',Province:$('cfProv').value||'-','Accounting software':soft.value==='Other'?('Other'+(softTxt.value.trim()?': '+softTxt.value.trim():'')):(soft.value||'-'),'Preferred contact':mode(),
       Email:$('cfEmail').value.trim(),Phone:phone.value.trim()||'-'};
     if(mode()==='Phone')d['Best time to call']=$('cfTime').value;
+    d['Monthly transactions']=volTouched?VOL[+vol.value]+' a month':'-';
+    d['How they found us']=hear.value?(hearTxt.value.trim()?hear.value+': '+hearTxt.value.trim():hear.value):'-';
     d.Message=$('cfMsg').value.trim()||'-';d.Consent='Agreed to be contacted';
     return d;
   }
