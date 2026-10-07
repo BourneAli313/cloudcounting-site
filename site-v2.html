@@ -532,12 +532,12 @@ footer{background:#cfe2f6;overflow:hidden}
 /* aura cursor + sparkle trail */
 .fx-ring,.fx-dot,.fx-trail{position:fixed;left:0;top:0;pointer-events:none;z-index:70}
 .fx-trail{width:100vw;height:100vh;height:100dvh}
-.fx-ring{width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;border:1.5px solid #fff;mix-blend-mode:difference;opacity:0;transition:opacity .25s,scale .25s,background .25s}
+.fx-ring{width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:999px;border:1.5px solid #fff;mix-blend-mode:difference;opacity:0;transition:opacity .25s,scale .25s,background .25s}
 .fx-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;mix-blend-mode:difference;opacity:0;transition:opacity .25s}
 .fx-ring.on,.fx-dot.on{opacity:1}
 .fx-ring.h{scale:1.7;background:rgba(255,255,255,.22)}
 /* cursor sticks to the nav links: the ring melts into a soft pill around the link and is pulled a little toward the pointer */
-.fx-ring{transition:opacity .25s,scale .25s,background .3s,border-color .3s,border-radius .45s cubic-bezier(.34,1.56,.64,1),width .45s cubic-bezier(.34,1.56,.64,1),height .45s cubic-bezier(.34,1.56,.64,1),margin .45s cubic-bezier(.34,1.56,.64,1)}
+.fx-ring{transition:opacity .25s,scale .25s,background .3s,border-color .3s,width .45s cubic-bezier(.34,1.56,.64,1),height .45s cubic-bezier(.34,1.56,.64,1),margin .45s cubic-bezier(.34,1.56,.64,1)}
 .fx-ring.s{mix-blend-mode:normal;scale:1;width:var(--rw);height:var(--rh);margin:calc(var(--rh)/-2) 0 0 calc(var(--rw)/-2);border-radius:999px;border-color:rgba(26,133,212,.5);background:rgba(26,133,212,.13)}
 .nav-links a{transition:color .2s}
 .btn{transition:translate .22s cubic-bezier(.2,.8,.2,1),background .2s,box-shadow .2s}
