@@ -1464,7 +1464,7 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
         <label class="cf-consent"><input type="checkbox" id="cfConsent" name="Consent" value="Agreed to be contacted" required><span>I agree to be contacted by CloudCounting about this enquiry. I can withdraw consent at any time.</span></label>
 
         <p class="cf-err" id="cfErr" role="alert" hidden></p>
-        <button class="btn btn-primary cf-submit" type="submit"><span>Send my details</span></button>
+        <button class="btn btn-primary cf-submit" type="submit"><span>Submit</span></button>
         <p class="cf-fine">Your details go straight to info@CloudCounting.ca. We do not share them.</p>
       </form>
     </div>
@@ -2631,7 +2631,7 @@ window.CCgl=function(cv,frag){
     if(form.querySelector('.cf-hp').value)return;          /* bot */
     if(!validate())return;
     var d=payload();btn.disabled=true;btn.firstChild.textContent='Sending...';
-    var finish=function(){btn.disabled=false;btn.firstChild.textContent='Send my details'};
+    var finish=function(){btn.disabled=false;btn.firstChild.textContent='Submit'};
     var ctrl=('AbortController' in window)?new AbortController():null,timer=setTimeout(function(){ctrl&&ctrl.abort()},12000);
     var req=GOOGLE_SCRIPT_URL
       ? fetch(GOOGLE_SCRIPT_URL,{method:'POST',body:JSON.stringify(d),signal:ctrl&&ctrl.signal})   /* plain text body: no CORS preflight */
