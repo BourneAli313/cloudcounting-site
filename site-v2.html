@@ -907,6 +907,11 @@ footer{background:#cfe2f6;overflow:hidden}
 .cf-pop-ok path{stroke-dasharray:26;stroke-dashoffset:26;animation:cfDraw .55s .35s ease-out forwards}
 @keyframes cfDraw{to{stroke-dashoffset:0}}
 @keyframes cfPulse{0%{box-shadow:0 0 0 0 rgba(23,168,107,.35)}100%{box-shadow:0 0 0 26px rgba(23,168,107,0)}}
+.cf-pop-ok.warn{background:rgba(224,148,20,.15);animation:cfPulseW 1.6s ease-out .3s}
+.cf-pop-ok.warn svg{stroke:#c98a12}.cf-pop-ok.warn path{stroke-dasharray:none;stroke-dashoffset:0;animation:none}
+@keyframes cfPulseW{0%{box-shadow:0 0 0 0 rgba(224,148,20,.35)}100%{box-shadow:0 0 0 26px rgba(224,148,20,0)}}
+.cf-pop-a{display:inline-block;margin-top:18px;padding:11px 22px;border-radius:999px;background:linear-gradient(180deg,#2a9be8,#1a85d4);color:#fff;font-weight:600;font-size:15px;text-decoration:none;box-shadow:0 8px 20px rgba(26,133,212,.3)}
+.cf-pop-a:focus-visible{outline:3px solid rgba(26,133,212,.4);outline-offset:3px}
 .cf-pop-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(16,40,80,.06);color:#51637f;font:400 20px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;padding:0}
 .cf-pop-x:hover,.cf-pop-x:focus-visible{background:rgba(16,40,80,.12);color:#0b1a2f;outline:none}
 .cf-pop-bar{position:absolute;left:0;bottom:0;height:4px;width:100%;background:linear-gradient(90deg,#2a9be8,#3ecf8e);transform-origin:left;transform:scaleX(1)}
@@ -2577,15 +2582,16 @@ window.CCgl=function(cv,frag){
     setTimeout(function(){s.remove();card.classList.remove('cf-magic')},2000);
   }
   var popOpen=false;
-  function popup(title,text,ms){
+  function popup(title,text,ms,action,warn){
     if(popOpen)return;popOpen=true;
     var prev=document.activeElement,y0=window.scrollY,x0=window.scrollX;
     var bg=document.createElement('div');bg.className='cf-pop-bg';
     bg.innerHTML='<div class="cf-pop" role="dialog" aria-modal="true" aria-labelledby="cfPopT" aria-describedby="cfPopD" tabindex="-1">'
       +'<button type="button" class="cf-pop-x" aria-label="Close">&times;</button>'
-      +'<div class="cf-pop-ok" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.3 4.3L18.5 8"/></svg></div>'
-      +'<h4 id="cfPopT"></h4><p id="cfPopD"></p><i class="cf-pop-bar" style="--ms:'+ms+'ms"></i></div>';
+      +'<div class="cf-pop-ok'+(warn?' warn':'')+'" aria-hidden="true">'+(warn?'<svg viewBox="0 0 24 24"><path d="M12 7v6.5M12 17.2v.1"/></svg>':'<svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.3 4.3L18.5 8"/></svg>')+'</div>'
+      +'<h4 id="cfPopT"></h4><p id="cfPopD"></p>'+(action?'<a class="cf-pop-a" target="_blank" rel="noopener"></a>':'')+(ms?'<i class="cf-pop-bar" style="--ms:'+ms+'ms"></i>':'')+'</div>';
     bg.querySelector('h4').textContent=title;bg.querySelector('p').textContent=text;
+    if(action){var al=bg.querySelector('.cf-pop-a');al.textContent=action.label;al.href=action.href}
     document.body.appendChild(bg);
     var box=bg.firstChild,bar=bg.querySelector('.cf-pop-bar'),timer=0,closed=false;
     function close(){
@@ -2598,11 +2604,11 @@ window.CCgl=function(cv,frag){
         if(Math.abs(window.scrollY-y0)>1||Math.abs(window.scrollX-x0)>1)window.scrollTo(x0,y0);
       },380);
     }
-    function onKey(e){if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='Tab'){e.preventDefault();box.querySelector('.cf-pop-x').focus({preventScroll:true})}}
+    function onKey(e){if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='Tab'){e.preventDefault();var f=box.querySelectorAll('.cf-pop-x,.cf-pop-a'),i=[].indexOf.call(f,document.activeElement);f[(i+(e.shiftKey?f.length-1:1))%f.length].focus({preventScroll:true})}}
     document.addEventListener('keydown',onKey,true);
     bg.addEventListener('click',function(e){if(e.target===bg||e.target.closest('.cf-pop-x'))close()});
-    requestAnimationFrame(function(){bg.classList.add('in');bar.classList.add('run');box.focus({preventScroll:true})});
-    timer=setTimeout(close,ms);
+    requestAnimationFrame(function(){bg.classList.add('in');if(bar)bar.classList.add('run');box.focus({preventScroll:true})});
+    if(ms)timer=setTimeout(close,ms);
   }
   function resetForm(){
     form.reset();syncMode();syncSoft();volTouched=false;vol.value=0;syncVol();syncHear();
@@ -2612,8 +2618,8 @@ window.CCgl=function(cv,frag){
     var r=btn.getBoundingClientRect(),origin={x:r.left+r.width/2,y:r.top+r.height/2};
     btn.disabled=true;
     if(viaEmail){
-      /* the message has not actually been sent yet, so no celebration and keep what they typed */
-      setTimeout(function(){popup('Your email is ready to send','We opened your email app with everything filled in. Press send and our team will get back to you shortly.',8000)},250);
+      /* the message did not go through: keep what they typed, say so plainly and offer a ready-made email */
+      setTimeout(function(){popup('We could not send that just now','Your details are still in the form. Please try again, or use the button below to email us instead.',0,{label:'Email us instead',href:mailtoFallback(d)},true)},250);
       return;
     }
     magic(origin,form.parentNode);sheen(form.parentNode);
@@ -2634,7 +2640,7 @@ window.CCgl=function(cv,frag){
           .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok||String(j.success)==='false')throw new Error(j.message||'send failed');return j})});
     req
       .then(function(){clearTimeout(timer);finish();success(d,false)})
-      .catch(function(){clearTimeout(timer);finish();window.location.href=mailtoFallback(d);success(d,true)});
+      .catch(function(){clearTimeout(timer);finish();success(d,true)});
   });
 })();
 </script>
