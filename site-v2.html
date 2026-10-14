@@ -2217,7 +2217,7 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
     if(parts.length||stick||(seen&&fine.matches&&(Math.abs(mx-rx)>.3||Math.abs(my-ry)>.3)))raf=requestAnimationFrame(loop);
   }
   function wake(){if(!raf)raf=requestAnimationFrame(loop)}
-  function hoverState(t){return !!(t&&t.closest&&t.closest('a,button,summary,label,input,select,textarea,.plan,.hscroll .ind'))}
+  function hoverState(t){return !!(t&&t.closest&&t.closest('a,button,summary,label,input,textarea,.plan,.hscroll .ind')&&!t.closest('select'))}
   function unmag(){if(mag){mag.style.translate='';mag=null}}
   document.addEventListener('pointermove',function(e){
     if(e.pointerType==='touch'||RM()||!fine.matches){return}
@@ -2660,15 +2660,19 @@ window.CCgl=function(cv,frag){
    so hide the custom cursor while one is open and bring it back once it closes */
 (function(){
   var root=document.documentElement,openAt=0,sel=null;
-  function show(){if(!sel)return;root.classList.remove('fx-native');sel=null}
+  function show(){if(!sel)return;root.classList.remove('fx-native');sel=null;var r=document.querySelector('.fx-ring');if(r)r.classList.remove('h')}
+  function hide(s){sel=s;openAt=performance.now();root.classList.add('fx-native')}
   document.addEventListener('pointerdown',function(e){
-    var s=e.target.closest&&e.target.closest('select');if(!s)return;
-    sel=s;openAt=performance.now();root.classList.add('fx-native');
+    var s=e.target.closest&&e.target.closest('select');
+    if(s){hide(s);return}
+    if(sel)show();                                   /* clicked somewhere else: the list is gone */
   },true);
-  document.addEventListener('change',function(e){if(e.target===sel)show()},true);
-  document.addEventListener('focusout',function(e){if(e.target===sel)show()},true);
   document.addEventListener('keydown',function(e){if(sel&&/^(Escape|Enter|Tab)$/.test(e.key))show()},true);
-  document.addEventListener('pointermove',function(){if(sel&&performance.now()-openAt>250)show()},{passive:true,capture:true});
+  document.addEventListener('change',function(e){if(e.target===sel)show()},true);
+  /* on Windows the native list is its own window and takes focus away; the select firing focusout
+     does NOT mean the list closed, so ignore it. The window getting focus back does mean it closed. */
+  window.addEventListener('focus',function(){if(sel&&performance.now()-openAt>120)show()});
+  document.addEventListener('pointermove',function(){if(sel&&performance.now()-openAt>400)show()},{passive:true,capture:true});
 })();
 </script>
 
