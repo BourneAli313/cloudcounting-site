@@ -2,6 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://cloudcounting.ca/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://cloudcounting.ca/privacy.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://cloudcounting.ca/terms.html</loc>
+    <lastmod>2026-10-15</lastmod>
   </url>
 </urlset>
