@@ -2222,8 +2222,6 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
     if(e.pointerType==='touch'||RM()||!fine.matches){return}
     mx=e.clientX;my=e.clientY;
     if(!seen){seen=true;rx=mx;ry=my;ring.classList.add('on');dot.classList.add('on')}
-    var d=Math.abs(mx-lx)+Math.abs(my-ly);
-    if(d>9){add(mx,my,1,.6,650);lx=mx;ly=my}
     var b=e.target.closest&&e.target.closest('.btn');
     if(b!==mag){unmag();mag=b||null}
     if(mag){var r=mag.getBoundingClientRect();mag.style.translate=((mx-r.left-r.width/2)*.22).toFixed(1)+'px '+((my-r.top-r.height/2)*.34).toFixed(1)+'px'}
