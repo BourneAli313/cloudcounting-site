@@ -1394,10 +1394,11 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
         <h3>Send us your details and we will usually get back to you within one business day.</h3>
         <p>Fields marked <i>*</i> are required.</p>
       </div>
-      <form class="cf-form" id="cfForm" action="https://formsubmit.co/info@CloudCounting.ca" method="POST" novalidate>
-        <input type="hidden" name="_subject" value="New website enquiry - CloudCounting">
-        <input type="hidden" name="_template" value="table">
-        <input type="text" name="_honey" class="cf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <form class="cf-form" id="cfForm" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="enquiry">
+        <input type="hidden" name="subject" value="New website enquiry - CloudCounting">
+        <input type="hidden" name="Services" value="">
+        <input type="text" name="bot-field" class="cf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
         <div class="cf-row">
           <div class="cf-field"><label for="cfName">Your name <i>*</i></label><input id="cfName" name="Name" type="text" autocomplete="name" required></div>
@@ -1447,7 +1448,7 @@ html.fx-native .fx-ring,html.fx-native .fx-dot{opacity:0!important;transition:no
         </fieldset>
 
         <div class="cf-row">
-          <div class="cf-field"><label for="cfEmail">Email address <i>*</i></label><input id="cfEmail" name="Email" type="email" autocomplete="email" required></div>
+          <div class="cf-field"><label for="cfEmail">Email address <i>*</i></label><input id="cfEmail" name="email" type="email" autocomplete="email" required></div>
           <div class="cf-field"><label for="cfPhone">Phone number <i class="cf-phreq" hidden>*</i></label><input id="cfPhone" name="Phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(555) 555-5555"></div>
         </div>
         <div class="cf-field cf-time" hidden><label for="cfTime">Best time to call</label>
@@ -2490,13 +2491,10 @@ window.CCgl=function(cv,frag){
 })();
 </script>
 <script>
-/* contact form: validate, send to info@CloudCounting.ca through FormSubmit, fall back to a pre-filled email */
+/* contact form: validate, send through Netlify Forms (notification goes to info@CloudCounting.ca), fall back to a pre-filled email */
 (function(){
   var form=document.getElementById('cfForm');if(!form)return;
-  /* Paste your Google Apps Script web app URL (ends in /exec) between the quotes.
-     When set, enquiries go through your Google Workspace; when empty, FormSubmit is used. */
-  var GOOGLE_SCRIPT_URL='';
-  var TO='info@CloudCounting.ca',ENDPOINT='https://formsubmit.co/ajax/'+TO;
+  var TO='info@CloudCounting.ca';
   var $=function(id){return document.getElementById(id)};
   var err=$('cfErr'),btn=form.querySelector('.cf-submit'),chips=$('cfServices');
   var phone=$('cfPhone'),phReq=form.querySelector('.cf-phreq'),timeBox=form.querySelector('.cf-time');
@@ -2537,10 +2535,10 @@ window.CCgl=function(cv,frag){
     err.hidden=true;return true;
   }
   function payload(){
-    var d={_subject:'New website enquiry - '+($('cfCo').value.trim()||$('cfName').value.trim()),_template:'table',_captcha:'false',
+    var d={_subject:'New website enquiry - '+($('cfCo').value.trim()||$('cfName').value.trim()),
       Name:$('cfName').value.trim(),Company:$('cfCo').value.trim()||'-',Services:services().join(', '),
       Industry:$('cfInd').value||'-',Province:$('cfProv').value||'-','Accounting software':soft.value==='Other'?('Other'+(softTxt.value.trim()?': '+softTxt.value.trim():'')):(soft.value||'-'),'Preferred contact':mode(),
-      Email:$('cfEmail').value.trim(),Phone:phone.value.trim()||'-'};
+      email:$('cfEmail').value.trim(),Phone:phone.value.trim()||'-'};
     if(mode()==='Phone')d['Best time to call']=$('cfTime').value;
     d['Monthly transactions']=volTouched?VOL[+vol.value]+' a month':'-';
     d['How they found us']=hear.value?(hearTxt.value.trim()?hear.value+': '+hearTxt.value.trim():hear.value):'-';
@@ -2641,11 +2639,11 @@ window.CCgl=function(cv,frag){
     var d=payload();btn.disabled=true;btn.firstChild.textContent='Sending...';
     var finish=function(){btn.disabled=false;btn.firstChild.textContent='Submit'};
     var ctrl=('AbortController' in window)?new AbortController():null,timer=setTimeout(function(){ctrl&&ctrl.abort()},12000);
-    var req=GOOGLE_SCRIPT_URL
-      ? fetch(GOOGLE_SCRIPT_URL,{method:'POST',body:JSON.stringify(d),signal:ctrl&&ctrl.signal})   /* plain text body: no CORS preflight */
-          .then(function(r){return r.json()}).then(function(j){if(!j||j.ok!==true)throw new Error((j&&j.error)||'send failed');return j})
-      : fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d),signal:ctrl&&ctrl.signal})
-          .then(function(r){return r.json().catch(function(){return {}}).then(function(j){if(!r.ok||String(j.success)==='false')throw new Error(j.message||'send failed');return j})});
+    /* Netlify Forms: urlencoded POST to the site root; the static form above tells Netlify which fields to expect */
+    var body=new URLSearchParams();body.append('form-name','enquiry');body.append('bot-field','');
+    Object.keys(d).forEach(function(k){body.append(k==='_subject'?'subject':k,d[k])});
+    var req=fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString(),signal:ctrl&&ctrl.signal})
+      .then(function(r){if(!r.ok)throw new Error('send failed');return r});
     req
       .then(function(){clearTimeout(timer);finish();success(d,false)})
       .catch(function(){clearTimeout(timer);finish();success(d,true)});
